@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
 
 /**
  * @OA\Info(
@@ -29,16 +29,20 @@ class AuthController extends Controller
      *     path="/api/register",
      *     summary="Register a new user",
      *     tags={"Authentication"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"name", "email", "password", "password_confirmation"},
+     *
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", example="john.doe@example.com"),
      *             @OA\Property(property="password", type="string", example="password"),
      *             @OA\Property(property="password_confirmation", type="string", example="password")
      *         )
      *     ),
+     *
      *     @OA\Response(response=201, description="User registered successfully"),
      *     @OA\Response(response=422, description="Validation error")
      * )
@@ -67,19 +71,25 @@ class AuthController extends Controller
      *     path="/api/login",
      *     summary="Login a user",
      *     tags={"Authentication"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"email", "password"},
+     *
      *             @OA\Property(property="email", type="string", example="john.doe@example.com"),
      *             @OA\Property(property="password", type="string", example="password")
      *         )
      *     ),
+     *
      *     @OA\Header(
      *         header="Accept",
      *         description="Accept application/json",
+     *
      *         @OA\Schema(type="string", default="application/json")
      *     ),
+     *
      *     @OA\Response(response=200, description="User logged in successfully"),
      *     @OA\Response(response=401, description="Invalid credentials")
      * )
@@ -91,7 +101,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             throw ValidationException::withMessages([
                 'email' => ['Invalid credentials'],
             ]);
@@ -109,12 +119,14 @@ class AuthController extends Controller
      *     summary="Logout the authenticated user",
      *     security={{"sanctum":{}}},
      *     tags={"Authentication"},
+     *
      *     @OA\Response(response=200, description="User logged out successfully")
      * )
      */
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
+
         return response()->json(['message' => 'Logged out successfully']);
     }
 
@@ -123,13 +135,17 @@ class AuthController extends Controller
      *     path="/api/forgot-password",
      *     summary="Request password reset link",
      *     tags={"Authentication"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"email"},
+     *
      *             @OA\Property(property="email", type="string", example="john.doe@example.com")
      *         )
      *     ),
+     *
      *     @OA\Response(response=200, description="Reset link sent successfully"),
      *     @OA\Response(response=400, description="Invalid email")
      * )
@@ -147,6 +163,5 @@ class AuthController extends Controller
         }
     }
 
-    public function resetPassword(Request $request)
-    {}
+    public function resetPassword(Request $request) {}
 }
