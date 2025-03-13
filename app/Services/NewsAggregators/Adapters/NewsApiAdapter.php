@@ -7,8 +7,8 @@ use App\Services\NewsAggregators\Enum\NewsAggregatorTypeEnum;
 use App\Services\NewsAggregators\Enum\NewsApiCategoryEnum;
 use App\Services\NewsAggregators\Exception\NewsAggregatorException;
 use App\Services\NewsAggregators\Repositories\NewsArticleRepository;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -45,6 +45,8 @@ class NewsApiAdapter implements NewsAggregatorInterface
                 throw NewsAggregatorException::missingConfiguration(NewsAggregatorTypeEnum::NEWS_API);
             }
 
+            $articles = [];
+
             $totalLimit = $data['limit'] ?? 100;
 
             $categories = NewsApiCategoryEnum::cases();
@@ -64,18 +66,12 @@ class NewsApiAdapter implements NewsAggregatorInterface
 
                 $articles = $response->json('articles', []);
 
-                foreach ($articles as $article) {
-                    $this->newsArticleRepository->create([
-                        'source' => $article['source']['name'] ?? null,
-                        'category' => $category->value,
-                        'author' => $article['author'] ?? null,
-                        'title' => $article['title'] ?? null,
-                        'description' => $article['description'] ?? null,
-                        'published_at' => ! empty($article['publishedAt']) ? Carbon::parse($article['publishedAt']) : now(),
-                        'url_to_image' => $article['urlToImage'] ?? null,
-                        'content' => $article['content'] ?? null,
-                        'api_source' => NewsAggregatorTypeEnum::NEWS_API->value,
-                    ]);
+                if (! empty($articles)) {
+                    DB::transaction(function () use ($articles, $category) {
+                        foreach ($articles as $article) {
+                            $this->newsArticleRepository->create(array_merge($article, ['category' => $category->value]), NewsAggregatorTypeEnum::NEWS_API);
+                        }
+                    });
                 }
             }
 

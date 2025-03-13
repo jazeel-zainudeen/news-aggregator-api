@@ -16,9 +16,9 @@ class NewsArticle extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'category',
-        'source',
-        'author',
+        'category_id',
+        'source_id',
+        'author_id',
         'title',
         'description',
         'published_at',

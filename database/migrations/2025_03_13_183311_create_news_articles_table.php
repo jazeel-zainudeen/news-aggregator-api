@@ -11,9 +11,9 @@ return new class extends Migration
     {
         Schema::create('news_articles', function (Blueprint $table) {
             $table->id();
-            $table->string('source')->nullable();
-            $table->string('category')->nullable();
-            $table->string('author')->nullable();
+            $table->foreignId('source_id')->nullable()->constrained();
+            $table->foreignId('category_id')->nullable()->constrained();
+            $table->foreignId('author_id')->nullable()->constrained();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
             $table->timestamp('published_at');

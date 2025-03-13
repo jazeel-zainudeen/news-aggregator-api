@@ -14,7 +14,7 @@ class FetchNewsArticles extends Command
      *
      * @var string
      */
-    protected $signature = 'news:fetch {--limit=100}';
+    protected $signature = 'news:fetch {--limit=100 : Number of articles to fetch per aggregator}';
 
     /**
      * The console command description.
@@ -25,10 +25,8 @@ class FetchNewsArticles extends Command
 
     /**
      * News aggregator service instance.
-     *
-     * @var NewsAggregatorService
      */
-    protected $newsAggregatorService;
+    protected NewsAggregatorService $newsAggregatorService;
 
     /**
      * Create a new command instance.
@@ -42,34 +40,38 @@ class FetchNewsArticles extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
-        if (empty($this->option('limit'))) {
-            $this->error('Limit option is required.');
+        $limit = (int) $this->option('limit');
+        if ($limit <= 0) {
+            $this->error('Invalid limit provided. It must be a positive number.');
 
             return;
         }
 
-        $this->info('Fetching news articles from all aggregators...');
+        $this->info("Starting news fetching process with a limit of {$limit} articles per aggregator...");
 
         try {
             $aggregators = NewsAggregatorTypeEnum::cases();
             foreach ($aggregators as $aggregator) {
+                $aggregatorTitle = NewsAggregatorTypeEnum::getTitle($aggregator);
+
                 $this->newLine();
-                $this->info('Fetching from: ' . $aggregator->name);
+                $this->info("Fetching articles from: {$aggregatorTitle}");
+
                 try {
-                    $this->newsAggregatorService->fetchNewsArticles($aggregator->value, [
-                        'limit' => $this->option('limit'),
-                    ]);
-                    $this->info('Completed fetching from: ' . $aggregator->name);
+                    $articles = $this->newsAggregatorService->fetchNewsArticles($aggregator->value, ['limit' => $limit]);
+                    $count = count($articles);
+                    $this->info("✔ Successfully fetched {$count} articles from {$aggregatorTitle}");
                 } catch (Exception $exception) {
-                    $this->error('Error fetching articles from ' . $aggregator->name . ': ' . $exception->getMessage());
+                    $this->error("❌ Failed to fetch from {$aggregatorTitle}: " . $exception->getMessage());
                 }
             }
+
             $this->newLine();
-            $this->info('News fetching completed successfully.');
+            $this->info('✅ News fetching process completed successfully.');
         } catch (Exception $e) {
-            $this->error('Error fetching articles: ' . $e->getMessage());
+            $this->error('❌ Unexpected error occurred: ' . $e->getMessage());
         }
     }
 }

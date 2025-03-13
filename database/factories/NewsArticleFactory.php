@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Author;
+use App\Models\Category;
+use App\Models\Source;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +20,9 @@ class NewsArticleFactory extends Factory
     public function definition(): array
     {
         return [
-            'category' => $this->faker->randomElements(['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']),
-            'source' => $this->faker->companySuffix(),
-            'author' => $this->faker->name(),
+            'category_id' => Category::factory(),
+            'source_id' => Source::factory(),
+            'author_id' => Author::factory(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'published_at' => $this->faker->dateTime(),

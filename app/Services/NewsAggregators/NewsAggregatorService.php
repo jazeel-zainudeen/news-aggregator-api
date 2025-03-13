@@ -16,7 +16,7 @@ class NewsAggregatorService
      *
      * @throws NewsAggregatorException If the aggregator type is invalid.
      */
-    public function fetchNewsArticles(string $type, array $attributes = []): void
+    public function fetchNewsArticles(string $type, array $attributes = []): array
     {
         $newsAggregatorType = NewsAggregatorTypeEnum::tryFrom($type);
 
@@ -25,6 +25,7 @@ class NewsAggregatorService
         }
 
         $taskHandler = NewsAggregatorFactory::make($newsAggregatorType);
-        $taskHandler->fetch($attributes);
+
+        return $taskHandler->fetch($attributes);
     }
 }

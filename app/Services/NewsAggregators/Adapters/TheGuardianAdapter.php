@@ -6,11 +6,9 @@ use App\Services\NewsAggregators\Contracts\NewsAggregatorInterface;
 use App\Services\NewsAggregators\Enum\NewsAggregatorTypeEnum;
 use App\Services\NewsAggregators\Exception\NewsAggregatorException;
 use App\Services\NewsAggregators\Repositories\NewsArticleRepository;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class TheGuardianAdapter implements NewsAggregatorInterface
 {
@@ -61,17 +59,7 @@ class TheGuardianAdapter implements NewsAggregatorInterface
             $articles = $response->json('response.results', []);
 
             foreach ($articles as $article) {
-                $this->newsArticleRepository->create([
-                    'source' => 'the-guardian',
-                    'category' => ! empty($article['sectionName']) ? Str::slug($article['sectionName']) : null,
-                    'author' => $article['fields']['byline'] ?? null,
-                    'title' => $article['webTitle'] ?? null,
-                    'description' => $article['fields']['trailText'] ?? null,
-                    'published_at' => ! empty($article['webPublicationDate']) ? Carbon::parse($article['webPublicationDate']) : now(),
-                    'url_to_image' => $article['fields']['thumbnail'] ?? null,
-                    'content' => $article['fields']['bodyText'] ?? null,
-                    'api_source' => NewsAggregatorTypeEnum::THE_GUARDIAN->value,
-                ]);
+                $this->newsArticleRepository->create($article, NewsAggregatorTypeEnum::THE_GUARDIAN);
             }
 
             return $articles;
