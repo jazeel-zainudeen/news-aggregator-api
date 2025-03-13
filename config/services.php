@@ -45,4 +45,9 @@ return [
         'endpoint' => env('THE_GUARDIAN_API_ENDPOINT'),
     ],
 
+    'the_new_york_times' => [
+        'key' => env('THE_NEW_YORK_TIMES_API_KEY'),
+        'endpoint' => env('THE_NEW_YORK_TIMES_API_ENDPOINT'),
+    ],
+
 ];

@@ -58,7 +58,7 @@ class TheGuardianAdapter implements NewsAggregatorInterface
                 throw NewsAggregatorException::failedToFetch(NewsAggregatorTypeEnum::THE_GUARDIAN);
             }
 
-            $articles = $response->json('response.results');
+            $articles = $response->json('response.results', []);
 
             foreach ($articles as $article) {
                 $this->newsArticleRepository->create([

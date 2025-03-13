@@ -62,7 +62,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
                     throw NewsAggregatorException::failedToFetch(NewsAggregatorTypeEnum::NEWS_API);
                 }
 
-                $articles = $response->json('articles');
+                $articles = $response->json('articles', []);
 
                 foreach ($articles as $article) {
                     $this->newsArticleRepository->create([
