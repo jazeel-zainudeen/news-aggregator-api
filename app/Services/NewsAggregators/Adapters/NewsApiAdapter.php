@@ -58,7 +58,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
                         'category' => $category->value,
                     ]);
 
-                if ($response->failed()) {
+                if ($response->failed() || $response->json('status') !== 'ok') {
                     throw NewsAggregatorException::failedToFetch(NewsAggregatorTypeEnum::NEWS_API);
                 }
 
