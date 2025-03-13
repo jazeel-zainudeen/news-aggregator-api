@@ -5,11 +5,16 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('login', [AuthenticatedSessionController::class, 'store']);
-Route::post('register', [RegisteredUserController::class, 'store']);
-Route::post('forgot-password', [PasswordResetController::class, 'sendResetLink']);
-Route::post('reset-password', [PasswordResetController::class, 'reset']);
+Route::controller(AuthenticatedSessionController::class)->group(function () {
+    Route::post('login', 'store')->name('auth.login');
+    Route::delete('logout', 'destroy')->middleware('auth:sanctum')->name('auth.logout');
+});
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy']);
+Route::controller(RegisteredUserController::class)->group(function () {
+    Route::post('register', 'store')->name('auth.register');
+});
+
+Route::controller(PasswordResetController::class)->group(function () {
+    Route::post('password/forgot', 'sendResetLink')->name('password.forgot');
+    Route::post('password/reset', 'reset')->name('password.reset');
 });
