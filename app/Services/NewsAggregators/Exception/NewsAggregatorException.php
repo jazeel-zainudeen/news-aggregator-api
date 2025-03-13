@@ -15,4 +15,19 @@ class NewsAggregatorException extends Exception
     {
         return new self(__('Invalid aggregator type'));
     }
+
+    /**
+     * Throws a NewsAggregatorException with a message indicating a failure to fetch news articles.
+     *
+     * @throws NewsAggregatorException
+     */
+    public static function failedToFetch(string $aggregator): self
+    {
+        return new self(__("Failed to fetch news articles from {$aggregator}."));
+    }
+
+    public static function missingConfiguration(string $aggregator): self
+    {
+        return new self(__("Missing configuration for {$aggregator}."));
+    }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Services\NewsAggregators\NewsAggregatorService;
 use App\Services\NewsAggregators\Enum\NewsAggregatorTypeEnum;
+use App\Services\NewsAggregators\NewsAggregatorService;
 use Exception;
+use Illuminate\Console\Command;
 
 class FetchNewsArticles extends Command
 {
@@ -14,7 +14,7 @@ class FetchNewsArticles extends Command
      *
      * @var string
      */
-    protected $signature = 'news:fetch';
+    protected $signature = 'news:fetch {--limit=100}';
 
     /**
      * The console command description.
@@ -44,14 +44,29 @@ class FetchNewsArticles extends Command
      */
     public function handle()
     {
+        if (empty($this->option('limit'))) {
+            $this->error('Limit option is required.');
+
+            return;
+        }
+
         $this->info('Fetching news articles from all aggregators...');
 
         try {
             $aggregators = NewsAggregatorTypeEnum::cases();
             foreach ($aggregators as $aggregator) {
-                $this->info("Fetching from: " . $aggregator->name);
-                $this->newsAggregatorService->fetchNewsArticles($aggregator->value);
+                $this->newLine();
+                $this->info('Fetching from: ' . $aggregator->name);
+                try {
+                    $this->newsAggregatorService->fetchNewsArticles($aggregator->value, [
+                        'limit' => $this->option('limit'),
+                    ]);
+                    $this->info('Completed fetching from: ' . $aggregator->name);
+                } catch (Exception $exception) {
+                    $this->error('Error fetching articles from ' . $aggregator->name . ': ' . $exception->getMessage());
+                }
             }
+            $this->newLine();
             $this->info('News fetching completed successfully.');
         } catch (Exception $e) {
             $this->error('Error fetching articles: ' . $e->getMessage());
