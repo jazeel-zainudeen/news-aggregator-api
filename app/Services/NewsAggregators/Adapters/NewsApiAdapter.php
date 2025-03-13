@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class NewsApiAdapter implements NewsAggregatorInterface
 {
@@ -43,9 +42,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
             $apiEndpoint = config('services.news_api.endpoint');
 
             if (empty($apiKey) || empty($apiEndpoint)) {
-                throw NewsAggregatorException::missingConfiguration(
-                    Str::of(NewsAggregatorTypeEnum::NEWS_API->value)->headline()
-                );
+                throw NewsAggregatorException::missingConfiguration(NewsAggregatorTypeEnum::NEWS_API);
             }
 
             $totalLimit = $data['limit'] ?? 100;
@@ -62,9 +59,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
                     ]);
 
                 if ($response->failed()) {
-                    throw NewsAggregatorException::failedToFetch(
-                        Str::of(NewsAggregatorTypeEnum::NEWS_API->value)->headline()
-                    );
+                    throw NewsAggregatorException::failedToFetch(NewsAggregatorTypeEnum::NEWS_API);
                 }
 
                 $articles = $response->json('articles');

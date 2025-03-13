@@ -2,6 +2,7 @@
 
 namespace App\Services\NewsAggregators\Exception;
 
+use App\Services\NewsAggregators\Enum\NewsAggregatorTypeEnum;
 use Exception;
 
 class NewsAggregatorException extends Exception
@@ -21,13 +22,22 @@ class NewsAggregatorException extends Exception
      *
      * @throws NewsAggregatorException
      */
-    public static function failedToFetch(string $aggregator): self
+    public static function failedToFetch(NewsAggregatorTypeEnum $aggregator): self
     {
-        return new self(__("Failed to fetch news articles from {$aggregator}."));
+        $aggregatorTitle = NewsAggregatorTypeEnum::getTitle($aggregator);
+
+        return new self(__("Failed to fetch news articles from {$aggregatorTitle}."));
     }
 
-    public static function missingConfiguration(string $aggregator): self
+    /**
+     * Throws a NewsAggregatorException with a message indicating missing configuration for an aggregator.
+     *
+     * @throws NewsAggregatorException
+     */
+    public static function missingConfiguration(NewsAggregatorTypeEnum $aggregator): self
     {
-        return new self(__("Missing configuration for {$aggregator}."));
+        $aggregatorTitle = NewsAggregatorTypeEnum::getTitle($aggregator);
+
+        return new self(__("Missing configuration for {$aggregatorTitle}."));
     }
 }
