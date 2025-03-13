@@ -17,25 +17,23 @@ class NewsApiAdapter implements NewsAggregatorInterface
 {
     /**
      * NewsArticleRepository instance.
-     *
-     * @var NewsArticleRepository
      */
     protected NewsArticleRepository $newsArticleRepository;
 
     /**
      * NewsApiAdapter constructor.
      *
-     * @param NewsArticleRepository $newsArticleRepository
+     * @param  NewsArticleRepository  $newsArticleRepository
      */
     public function __construct()
     {
-        $this->newsArticleRepository = new NewsArticleRepository();
+        $this->newsArticleRepository = new NewsArticleRepository;
     }
 
     /**
      * Fetch news articles from NewsAPI.
      *
-     * @param array<string, mixed> $data Data required to fetch news articles.
+     * @param  array<string, mixed>  $data  Data required to fetch news articles.
      * @return array<int, mixed> The fetched news articles.
      */
     public function fetch(array $data): array
@@ -60,7 +58,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
                 $response = Http::withToken($apiKey)
                     ->get($apiEndpoint . 'top-headlines', [
                         'pageSize' => $singleCategoryLimit,
-                        'category' => $category->value
+                        'category' => $category->value,
                     ]);
 
                 if ($response->failed()) {
@@ -78,10 +76,10 @@ class NewsApiAdapter implements NewsAggregatorInterface
                         'author' => $article['author'] ?? null,
                         'title' => $article['title'] ?? null,
                         'description' => $article['description'] ?? null,
-                        'published_at' => !empty($article['publishedAt']) ? Carbon::parse($article['publishedAt']) : now(),
+                        'published_at' => ! empty($article['publishedAt']) ? Carbon::parse($article['publishedAt']) : now(),
                         'url_to_image' => $article['urlToImage'] ?? null,
                         'content' => $article['content'] ?? null,
-                        'api_source' => NewsAggregatorTypeEnum::NEWS_API->value
+                        'api_source' => NewsAggregatorTypeEnum::NEWS_API->value,
                     ]);
                 }
             }
@@ -90,7 +88,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
         } catch (Exception $exception) {
             Log::error('Failed to fetch news articles from NewsAPI', [
                 'exception' => $exception,
-                'data' => $data
+                'data' => $data,
             ]);
 
             throw $exception;

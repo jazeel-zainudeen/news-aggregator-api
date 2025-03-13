@@ -9,8 +9,7 @@ class NewsArticleRepository
     /**
      * Save news article to the database.
      *
-     * @param array<int, mixed> $attributes The attributes to store.
-     * @return NewsArticle
+     * @param  array<int, mixed>  $attributes  The attributes to store.
      */
     public function create(array $attributes): NewsArticle
     {
@@ -20,7 +19,7 @@ class NewsArticleRepository
                 'author' => $attributes['author'],
                 'title' => $attributes['title'],
                 'source' => $attributes['source'],
-                'published_at' => $attributes['published_at']
+                'published_at' => $attributes['published_at'],
             ],
             $attributes
         );

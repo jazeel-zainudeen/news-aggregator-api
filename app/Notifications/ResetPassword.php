@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use SensitiveParameter;
 
 class ResetPassword extends Notification implements ShouldQueue
 {
@@ -21,7 +22,7 @@ class ResetPassword extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(#[\SensitiveParameter] $token)
+    public function __construct(#[SensitiveParameter] $token)
     {
         $this->token = $token;
     }

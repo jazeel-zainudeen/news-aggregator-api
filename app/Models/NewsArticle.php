@@ -24,7 +24,7 @@ class NewsArticle extends Model
         'published_at',
         'url_to_image',
         'content',
-        'api_source'
+        'api_source',
     ];
 
     /**
