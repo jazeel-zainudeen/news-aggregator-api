@@ -30,10 +30,7 @@ class NewsApiAdapter implements NewsAggregatorInterface
     }
 
     /**
-     * Fetch news articles from NewsAPI.
-     *
-     * @param  array<string, mixed>  $data  Data required to fetch news articles.
-     * @return array<int, mixed> The fetched news articles.
+     * @inheritDoc
      */
     public function fetch(array $data): array
     {

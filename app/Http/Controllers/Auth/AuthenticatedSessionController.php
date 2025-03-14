@@ -80,7 +80,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * @OA\Post(
+     * @OA\Delete(
      *     path="/api/logout",
      *     tags={"Authentication"},
      *     summary="Logout user and revoke token",

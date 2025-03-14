@@ -29,10 +29,7 @@ class NewYorkTimesAdapter implements NewsAggregatorInterface
     }
 
     /**
-     * Fetch news articles from New York Times.
-     *
-     * @param  array<int|string, mixed>  $data  Data required to fetch news articles.
-     * @return array<int, mixed> The fetched news articles.
+     * @inheritDoc
      */
     public function fetch(array $data): array
     {
