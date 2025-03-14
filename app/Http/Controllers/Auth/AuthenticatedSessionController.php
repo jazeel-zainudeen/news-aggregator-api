@@ -85,7 +85,7 @@ class AuthenticatedSessionController extends Controller
      *     tags={"Authentication"},
      *     summary="Logout user and revoke token",
      *     description="Logs out the authenticated user by revoking the token.",
-     *     security={{"bearerAuth":{}}},
+     *     security={{"sanctum":{}}},
      *
      *     @OA\RequestBody(
      *         required=false,

@@ -130,7 +130,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "sanctum": []
                     }
                 ]
             }
@@ -373,18 +373,20 @@
             }
         }
     },
-    "components": {
-        "securitySchemes": {
-            "sanctum": {
-                "type": "http",
-                "scheme": "bearer"
-            }
-        }
-    },
     "tags": [
         {
             "name": "Authentication",
             "description": "API Endpoints for User Authentication"
         }
-    ]
+    ],
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter your Sanctum token. \"Bearer\" prefix will be added automatically."
+            }
+        }
+    }
 }

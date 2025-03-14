@@ -210,13 +210,13 @@ return [
                         ],
                     ],
                 ],
-                'sanctum' => [ // Unique name of security
-                    'type' => 'apiKey', // Valid values are "basic", "apiKey" or "oauth2".
-                    'description' => 'Enter token in format (Bearer <token>)',
-                    'name' => 'Authorization', // The name of the header or query parameter to be used.
-                    'in' => 'header', // The location of the API key. Valid values are "query" or "header".
-                ],
                 */
+                'sanctum' => [
+                    'type' => 'http',
+                    'scheme' => 'bearer',
+                    'bearerFormat' => 'JWT',
+                    'description' => 'Enter your Sanctum token. "Bearer" prefix will be added automatically.',
+                ],
             ],
             'security' => [
                 /*
@@ -300,7 +300,7 @@ return [
                 /*
                  * If set to true, it persists authorization data, and it would not be lost on browser close/refresh
                  */
-                'persist_authorization' => env('L5_SWAGGER_UI_PERSIST_AUTHORIZATION', false),
+                'persist_authorization' => env('L5_SWAGGER_UI_PERSIST_AUTHORIZATION', true),
 
                 'oauth2' => [
                     /*
