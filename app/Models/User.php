@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -48,9 +48,9 @@ class User extends Authenticatable
     /**
      * Get the user's preferences.
      */
-    public function preferences(): MorphTo
+    public function preferences(): HasMany
     {
-        return $this->morphTo();
+        return $this->hasMany(UserPreference::class);
     }
 
     /**

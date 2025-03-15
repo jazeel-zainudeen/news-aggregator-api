@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserPreferenceResource extends JsonResource
+{
+    /**
+     * @OA\Schema(
+     *     schema="UserPreferenceResource",
+     *     type="object",
+     *
+     *     @OA\Property(property="preferable_type", type="string", example="category"),
+     *     @OA\Property(property="name", type="string", example="Business")
+     * )
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'preferable_type' => $this->preferable_type,
+            'name' => $this->preferable->name,
+        ];
+    }
+}

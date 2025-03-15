@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\LookupController;
+use App\Http\Controllers\UserPreferenceController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
@@ -31,5 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ArticleController::class)->group(function () {
         Route::get('articles', 'index')->name('articles.index');
         Route::get('articles/{article}', 'show')->name('articles.show');
+    });
+
+    Route::controller(UserPreferenceController::class)->prefix('user/preferences')->group(function () {
+        Route::put('/', 'update')->name('user.preferences.update');
+        Route::get('/', 'index')->name('user.preferences.index');
     });
 });

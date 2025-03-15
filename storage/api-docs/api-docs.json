@@ -491,14 +491,14 @@
                 }
             }
         },
-        "/api/filters/categories": {
+        "/api/lookup/categories": {
             "get": {
                 "tags": [
-                    "Filters"
+                    "Lookup"
                 ],
                 "summary": "Get list of categories",
                 "description": "List all categories with pagination.",
-                "operationId": "20ca815c71d9dfb898253ba8b1bbe712",
+                "operationId": "1c13e25c57ac88d6d8b7d34815b26e61",
                 "parameters": [
                     {
                         "name": "per_page",
@@ -533,14 +533,14 @@
                 ]
             }
         },
-        "/api/filters/sources": {
+        "/api/lookup/sources": {
             "get": {
                 "tags": [
-                    "Filters"
+                    "Lookup"
                 ],
                 "summary": "Get list of sources",
                 "description": "List all sources with pagination.",
-                "operationId": "17dd2b07cc1f59efd050dda7c1d880c9",
+                "operationId": "12cd4ea2dae7567aca21591c80a480b8",
                 "parameters": [
                     {
                         "name": "per_page",
@@ -566,6 +566,165 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/lookup/authors": {
+            "get": {
+                "tags": [
+                    "Lookup"
+                ],
+                "summary": "Get list of authors",
+                "description": "List all authors with pagination.",
+                "operationId": "c0efe8bf0d062a63dd51c3d14d061059",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AuthorResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/user/preferences": {
+            "get": {
+                "tags": [
+                    "User Preferences"
+                ],
+                "summary": "Get the current user's preferences",
+                "description": "List the current user's preferences.",
+                "operationId": "8fab3ca230c1b2ee4cf34b32b07057d9",
+                "responses": {
+                    "200": {
+                        "description": "List of preferences",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserPreferenceResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "User Preferences"
+                ],
+                "summary": "Update the user's preferences",
+                "description": "Update user preferences (remove old ones not in selection, add new ones).",
+                "operationId": "1cbe16908c709917bb63982d2756d434",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "preferences"
+                                ],
+                                "properties": {
+                                    "preferences": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "preferable_id",
+                                                "preferable_type"
+                                            ],
+                                            "properties": {
+                                                "preferable_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "preferable_type": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "category",
+                                                        "source",
+                                                        "author"
+                                                    ],
+                                                    "example": "category"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "minItems": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preferences updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Preferences updated successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/UserPreferenceResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid data"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -623,6 +782,22 @@
                 },
                 "type": "object"
             },
+            "AuthorResource": {
+                "title": "Author Resource",
+                "description": "Author data representation",
+                "properties": {
+                    "id": {
+                        "description": "Transform the resource into an array.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Sucheta Dalal"
+                    }
+                },
+                "type": "object"
+            },
             "CategoryResource": {
                 "title": "Category Resource",
                 "description": "Category data representation",
@@ -651,6 +826,19 @@
                     "name": {
                         "type": "string",
                         "example": "The New York Times"
+                    }
+                },
+                "type": "object"
+            },
+            "UserPreferenceResource": {
+                "properties": {
+                    "preferable_type": {
+                        "type": "string",
+                        "example": "category"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Business"
                     }
                 },
                 "type": "object"
@@ -727,8 +915,12 @@
             "description": "API Endpoints for User Authentication"
         },
         {
-            "name": "Filters",
-            "description": "Endpoints to list available categories and sources for filtering"
+            "name": "Lookup",
+            "description": "Endpoints to list available categories, sources and authors"
+        },
+        {
+            "name": "User Preferences",
+            "description": "API Endpoints for managing user preferences"
         }
     ]
 }
