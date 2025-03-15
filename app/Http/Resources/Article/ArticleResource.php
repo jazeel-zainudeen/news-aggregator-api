@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
  *     type="object",
  *     title="Article Resource",
  *     description="Article resource representation",
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="author", type="string", example="John Doe"),
  *     @OA\Property(property="title", type="string", example="Breaking News: Laravel 12 Released"),
@@ -35,13 +36,13 @@ class ArticleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'author' => $this->whenLoaded('author', fn() => $this->author?->name),
+            'author' => $this->whenLoaded('author', fn () => $this->author?->name),
             'title' => $this->title,
             'description' => $this->description,
             'content' => $this->content,
             'image' => $this->url_to_image,
-            'source' => $this->whenLoaded('source', fn() => $this->source?->name),
-            'category' => $this->whenLoaded('category', fn() => Str::headline($this->category?->name)),
+            'source' => $this->whenLoaded('source', fn () => $this->source?->name),
+            'category' => $this->whenLoaded('category', fn () => Str::headline($this->category?->name)),
             'published_at' => $this->published_at?->format('Y-m-d H:i:s'),
         ];
     }

@@ -4,7 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\FilterController;
+use App\Http\Controllers\LookupController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthenticatedSessionController::class)->group(function () {
@@ -22,9 +22,10 @@ Route::controller(PasswordResetController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::controller(FilterController::class)->prefix('filters')->group(function () {
-        Route::get('categories', 'listCategories')->name('filter.categories');
-        Route::get('sources', 'listSources')->name('filter.sources');
+    Route::controller(LookupController::class)->prefix('lookup')->group(function () {
+        Route::get('categories', 'listCategories')->name('lookup.categories');
+        Route::get('sources', 'listSources')->name('lookup.sources');
+        Route::get('authors', 'listAuthors')->name('lookup.authors');
     });
 
     Route::controller(ArticleController::class)->group(function () {

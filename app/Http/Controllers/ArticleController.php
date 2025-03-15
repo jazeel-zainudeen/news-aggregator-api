@@ -104,18 +104,23 @@ class ArticleController extends Controller
      *     summary="Get a specific article",
      *     tags={"Article Management"},
      *     security={{"sanctum":{}}},
+     *
      *     @OA\Parameter(
      *         name="article",
      *         in="path",
      *         required=true,
      *         description="ID of the article",
+     *
      *         @OA\Schema(type="integer")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful response",
+     *
      *         @OA\JsonContent(ref="#/components/schemas/ArticleResource")
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="Article not found"
@@ -125,7 +130,7 @@ class ArticleController extends Controller
     public function show(NewsArticle $article): ArticleResource
     {
         $article->load(['source:id,name', 'category:id,name', 'author:id,name']);
-        
+
         return new ArticleResource($article);
     }
 }
