@@ -6,6 +6,125 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/articles": {
+            "get": {
+                "tags": [
+                    "Article Management"
+                ],
+                "summary": "Get a list of articles with filtering options",
+                "description": "News article listing with filters.",
+                "operationId": "11aa4cc6561a7b94c56d1201d62513ee",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of articles per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search articles by keyword",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Filter articles by date (YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "description": "Filter articles by category(id)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "source",
+                        "in": "query",
+                        "description": "Filter articles by source(id)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of filtered articles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/NewsArticle"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/articles/{article}": {
+            "get": {
+                "tags": [
+                    "Article Management"
+                ],
+                "summary": "Get a specific article",
+                "operationId": "4a09e05e36f650b9c54ba9a601b735f9",
+                "parameters": [
+                    {
+                        "name": "article",
+                        "in": "path",
+                        "description": "ID of the article",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ArticleResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Article not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -81,13 +200,13 @@
             }
         },
         "/api/logout": {
-            "post": {
+            "delete": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Logout user and revoke token",
                 "description": "Logs out the authenticated user by revoking the token.",
-                "operationId": "0ab4e3cf7bc4f7ec81b48f7928c7de7c",
+                "operationId": "250045954f07adf40103e33a04e5d715",
                 "requestBody": {
                     "required": false,
                     "content": {
@@ -371,15 +490,224 @@
                     }
                 }
             }
+        },
+        "/api/filters/categories": {
+            "get": {
+                "tags": [
+                    "Filters"
+                ],
+                "summary": "Get list of categories",
+                "description": "List all categories with pagination.",
+                "operationId": "20ca815c71d9dfb898253ba8b1bbe712",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CategoryResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/filters/sources": {
+            "get": {
+                "tags": [
+                    "Filters"
+                ],
+                "summary": "Get list of sources",
+                "description": "List all sources with pagination.",
+                "operationId": "17dd2b07cc1f59efd050dda7c1d880c9",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SourceResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
-    "tags": [
-        {
-            "name": "Authentication",
-            "description": "API Endpoints for User Authentication"
-        }
-    ],
     "components": {
+        "schemas": {
+            "ArticleResource": {
+                "title": "Article Resource",
+                "description": "Article resource representation",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Breaking News: Laravel 12 Released"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A brief summary of the article."
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Full content of the article..."
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://example.com/image.jpg"
+                    },
+                    "source": {
+                        "type": "string",
+                        "example": "BBC News"
+                    },
+                    "category": {
+                        "type": "string",
+                        "example": "World News"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-15 12:34:56"
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryResource": {
+                "title": "Category Resource",
+                "description": "Category data representation",
+                "properties": {
+                    "id": {
+                        "description": "Transform the resource into an array.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Sports"
+                    }
+                },
+                "type": "object"
+            },
+            "SourceResource": {
+                "title": "Category Resource",
+                "description": "Category data representation",
+                "properties": {
+                    "id": {
+                        "description": "Transform the resource into an array.",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "The New York Times"
+                    }
+                },
+                "type": "object"
+            },
+            "NewsArticle": {
+                "title": "News Article Model",
+                "description": "Represents a news article with various attributes",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "description": "Category ID of the article",
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "source_id": {
+                        "description": "Source ID of the article",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "author_id": {
+                        "description": "Author ID of the article",
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Breaking News: AI Revolution"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A brief description of the article"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-15T10:00:00Z"
+                    },
+                    "url_to_image": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://example.com/image.jpg"
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Full content of the article"
+                    },
+                    "api_source": {
+                        "type": "string",
+                        "example": "NewsAPI"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "sanctum": {
                 "type": "http",
@@ -388,5 +716,19 @@
                 "description": "Enter your Sanctum token. \"Bearer\" prefix will be added automatically."
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Article Management",
+            "description": "API Endpoints for managing articles"
+        },
+        {
+            "name": "Authentication",
+            "description": "API Endpoints for User Authentication"
+        },
+        {
+            "name": "Filters",
+            "description": "Endpoints to list available categories and sources for filtering"
+        }
+    ]
 }

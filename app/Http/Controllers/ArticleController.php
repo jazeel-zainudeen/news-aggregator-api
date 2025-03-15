@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Filters\NewsArticleFilter;
 use App\Http\Requests\Article\ArticleListingRequest;
 use App\Http\Resources\Article\ArticleListingResource;
+use App\Http\Resources\Article\ArticleResource;
 use App\Models\NewsArticle;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -95,5 +96,36 @@ class ArticleController extends Controller
             ->cursorPaginate($request->get('per_page', 20));
 
         return ArticleListingResource::collection($articles);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/articles/{article}",
+     *     summary="Get a specific article",
+     *     tags={"Article Management"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="article",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the article",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(ref="#/components/schemas/ArticleResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Article not found"
+     *     )
+     * )
+     */
+    public function show(NewsArticle $article): ArticleResource
+    {
+        $article->load(['source:id,name', 'category:id,name', 'author:id,name']);
+        
+        return new ArticleResource($article);
     }
 }
