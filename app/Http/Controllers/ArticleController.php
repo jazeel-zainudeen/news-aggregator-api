@@ -7,7 +7,9 @@ use App\Http\Requests\Article\ArticleListingRequest;
 use App\Http\Resources\Article\ArticleListingResource;
 use App\Http\Resources\Article\ArticleResource;
 use App\Models\NewsArticle;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @OA\Tag(
@@ -132,5 +134,75 @@ class ArticleController extends Controller
         $article->load(['source:id,name', 'category:id,name', 'author:id,name']);
 
         return new ArticleResource($article);
+    }
+
+    /**
+     * Personalized news article listing
+     *
+     * @OA\Get(
+     *     path="/api/articles/personalized",
+     *     summary="Get a list of personalized articles",
+     *     tags={"Article Management"},
+     *     security={{"sanctum":{}}},
+     *
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of articles per page",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=20)
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of articles",
+     *
+     *         @OA\JsonContent(
+     *             type="array",
+     *
+     *             @OA\Items(ref="#/components/schemas/NewsArticle")
+     *         )
+     *     )
+     * )
+     */
+    public function personalizedFeed(Request $request): AnonymousResourceCollection
+    {
+        $user = Auth::user();
+        $userPreferences = $user->preferences()->get()->groupBy('preferable_type');
+
+        $authorIds = $userPreferences->has('author') 
+            ? $userPreferences->get('author')->pluck('preferable_id')->filter()->toArray() 
+            : [];
+
+        $categoryIds = $userPreferences->has('category') 
+            ? $userPreferences->get('category')->pluck('preferable_id')->filter()->toArray() 
+            : [];
+
+        $sourceIds = $userPreferences->has('source') 
+            ? $userPreferences->get('source')->pluck('preferable_id')->filter()->toArray() 
+            : [];
+
+        $articles = NewsArticle::select('id', 'source_id', 'category_id', 'author_id', 'title', 'description', 'published_at')
+            ->with([
+                'source:id,name',
+                'category:id,name',
+                'author:id,name',
+            ])
+            ->where(function ($query) use ($authorIds, $categoryIds, $sourceIds) {
+                if (!empty($authorIds)) {
+                    $query->orWhereIn('author_id', $authorIds);
+                }
+                if (!empty($categoryIds)) {
+                    $query->orWhereIn('category_id', $categoryIds);
+                }
+                if (!empty($sourceIds)) {
+                    $query->orWhereIn('source_id', $sourceIds);
+                }
+            })
+            ->latest('news_articles.published_at')
+            ->cursorPaginate($request->get('per_page', 20));
+
+        return ArticleListingResource::collection($articles);
     }
 }
