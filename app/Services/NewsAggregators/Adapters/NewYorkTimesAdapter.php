@@ -29,7 +29,7 @@ class NewYorkTimesAdapter implements NewsAggregatorInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function fetch(array $data): array
     {

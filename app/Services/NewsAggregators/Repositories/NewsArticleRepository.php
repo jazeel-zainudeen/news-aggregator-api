@@ -36,13 +36,13 @@ class NewsArticleRepository
         $attributes['source'] = $attributes['source']['name'] ?? null;
         $attributes['publishedAt'] = Carbon::parse($attributes['publishedAt'] ?? now());
         $attributes['api_source'] = NewsAggregatorTypeEnum::NEWS_API->value;
-        
+
         $this->storeArticle($attributes);
     }
 
     protected function createTheGuardianArticle(array $attributes): void
     {
-        $attributes['category'] = !empty($attributes['sectionName']) ? Str::slug($attributes['sectionName']) : null;
+        $attributes['category'] = ! empty($attributes['sectionName']) ? Str::slug($attributes['sectionName']) : null;
         $attributes['author'] = $attributes['fields']['byline'] ?? null;
         $attributes['source'] = 'The Guardian';
         $attributes['title'] = $attributes['webTitle'] ?? null;
@@ -51,7 +51,7 @@ class NewsArticleRepository
         $attributes['urlToImage'] = $attributes['fields']['thumbnail'] ?? null;
         $attributes['content'] = $attributes['fields']['bodyText'] ?? null;
         $attributes['api_source'] = NewsAggregatorTypeEnum::THE_GUARDIAN->value;
-        
+
         $this->storeArticle($attributes);
     }
 
@@ -64,7 +64,7 @@ class NewsArticleRepository
         $attributes['urlToImage'] = Arr::get($attributes, 'multimedia.0.url');
         $attributes['content'] = $attributes['abstract'] ?? null;
         $attributes['api_source'] = NewsAggregatorTypeEnum::NEW_YORK_TIMES->value;
-        
+
         $this->storeArticle($attributes);
     }
 
@@ -115,6 +115,7 @@ class NewsArticleRepository
         if ($author) {
             $author = Str::of($author)->after('By ');
         }
+
         return $this->cacheEntity(Author::class, $author);
     }
 
