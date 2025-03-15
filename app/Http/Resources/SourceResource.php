@@ -15,8 +15,8 @@ class SourceResource extends JsonResource
      * @OA\Schema(
      *     schema="SourceResource",
      *     type="object",
-     *     title="Category Resource",
-     *     description="Category data representation",
+     *     title="Source Resource",
+     *     description="Source data representation",
      *
      *     @OA\Property(property="id", type="integer", example=1),
      *     @OA\Property(property="name", type="string", example="The New York Times")

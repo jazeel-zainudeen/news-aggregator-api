@@ -7,24 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @OA\Schema(
- *     schema="NewsArticle",
- *     title="News Article Model",
- *     description="Represents a news article with various attributes",
- *
- *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="category_id", type="integer", example=2, description="Category ID of the article"),
- *     @OA\Property(property="source_id", type="integer", example=3, description="Source ID of the article"),
- *     @OA\Property(property="author_id", type="integer", example=5, description="Author ID of the article"),
- *     @OA\Property(property="title", type="string", example="Breaking News: AI Revolution"),
- *     @OA\Property(property="description", type="string", example="A brief description of the article"),
- *     @OA\Property(property="published_at", type="string", format="date-time", example="2025-03-15T10:00:00Z"),
- *     @OA\Property(property="url_to_image", type="string", format="url", example="https://example.com/image.jpg"),
- *     @OA\Property(property="content", type="string", example="Full content of the article"),
- *     @OA\Property(property="api_source", type="string", example="NewsAPI")
- * )
- */
 class NewsArticle extends Model
 {
     /** @use HasFactory<\Database\Factories\NewsArticleFactory> */

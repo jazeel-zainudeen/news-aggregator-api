@@ -80,7 +80,7 @@ class ArticleController extends Controller
      *         @OA\JsonContent(
      *             type="array",
      *
-     *             @OA\Items(ref="#/components/schemas/NewsArticle")
+     *             @OA\Items(ref="#/components/schemas/ArticleListingResource")
      *         )
      *     )
      * )
@@ -161,7 +161,7 @@ class ArticleController extends Controller
      *         @OA\JsonContent(
      *             type="array",
      *
-     *             @OA\Items(ref="#/components/schemas/NewsArticle")
+     *             @OA\Items(ref="#/components/schemas/ArticleListingResource")
      *         )
      *     )
      * )

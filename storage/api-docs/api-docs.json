@@ -71,7 +71,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/NewsArticle"
+                                        "$ref": "#/components/schemas/ArticleListingResource"
                                     }
                                 }
                             }
@@ -116,6 +116,48 @@
                     },
                     "404": {
                         "description": "Article not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/articles/personalized": {
+            "get": {
+                "tags": [
+                    "Article Management"
+                ],
+                "summary": "Get a list of personalized articles",
+                "description": "Personalized news article listing",
+                "operationId": "3095754b079d82aa70b2d130981a1948",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of articles per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of articles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ArticleListingResource"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -737,6 +779,44 @@
     },
     "components": {
         "schemas": {
+            "ArticleListingResource": {
+                "title": "Article Listing Resource",
+                "description": "Article details returned in a listing",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "John Doe",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Breaking News: Laravel 12 Released"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Laravel 12 brings many improvements including..."
+                    },
+                    "source": {
+                        "type": "string",
+                        "example": "TechCrunch",
+                        "nullable": true
+                    },
+                    "category": {
+                        "type": "string",
+                        "example": "Technology"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-03-15 14:30:00"
+                    }
+                },
+                "type": "object"
+            },
             "ArticleResource": {
                 "title": "Article Resource",
                 "description": "Article resource representation",
@@ -815,8 +895,8 @@
                 "type": "object"
             },
             "SourceResource": {
-                "title": "Category Resource",
-                "description": "Category data representation",
+                "title": "Source Resource",
+                "description": "Source data representation",
                 "properties": {
                     "id": {
                         "description": "Transform the resource into an array.",
@@ -831,7 +911,12 @@
                 "type": "object"
             },
             "UserPreferenceResource": {
+                "title": "User Preference Resource",
                 "properties": {
+                    "preferable_id": {
+                        "type": "integer",
+                        "example": "1"
+                    },
                     "preferable_type": {
                         "type": "string",
                         "example": "category"
@@ -839,58 +924,6 @@
                     "name": {
                         "type": "string",
                         "example": "Business"
-                    }
-                },
-                "type": "object"
-            },
-            "NewsArticle": {
-                "title": "News Article Model",
-                "description": "Represents a news article with various attributes",
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "category_id": {
-                        "description": "Category ID of the article",
-                        "type": "integer",
-                        "example": 2
-                    },
-                    "source_id": {
-                        "description": "Source ID of the article",
-                        "type": "integer",
-                        "example": 3
-                    },
-                    "author_id": {
-                        "description": "Author ID of the article",
-                        "type": "integer",
-                        "example": 5
-                    },
-                    "title": {
-                        "type": "string",
-                        "example": "Breaking News: AI Revolution"
-                    },
-                    "description": {
-                        "type": "string",
-                        "example": "A brief description of the article"
-                    },
-                    "published_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "example": "2025-03-15T10:00:00Z"
-                    },
-                    "url_to_image": {
-                        "type": "string",
-                        "format": "url",
-                        "example": "https://example.com/image.jpg"
-                    },
-                    "content": {
-                        "type": "string",
-                        "example": "Full content of the article"
-                    },
-                    "api_source": {
-                        "type": "string",
-                        "example": "NewsAPI"
                     }
                 },
                 "type": "object"

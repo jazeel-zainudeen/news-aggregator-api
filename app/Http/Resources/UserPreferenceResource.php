@@ -9,6 +9,7 @@ class UserPreferenceResource extends JsonResource
 {
     /**
      * @OA\Schema(
+     *     title="User Preference Resource",
      *     schema="UserPreferenceResource",
      *     type="object",
      *
