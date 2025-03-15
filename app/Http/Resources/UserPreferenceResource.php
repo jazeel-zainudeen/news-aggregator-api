@@ -12,6 +12,7 @@ class UserPreferenceResource extends JsonResource
      *     schema="UserPreferenceResource",
      *     type="object",
      *
+     *     @OA\Property(property="preferable_id", type="int", example="1"),
      *     @OA\Property(property="preferable_type", type="string", example="category"),
      *     @OA\Property(property="name", type="string", example="Business")
      * )
@@ -19,6 +20,7 @@ class UserPreferenceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'preferable_id' => $this->preferable_id,
             'preferable_type' => $this->preferable_type,
             'name' => $this->preferable->name,
         ];
