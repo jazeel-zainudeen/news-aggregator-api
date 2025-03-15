@@ -23,11 +23,11 @@ class NewsArticleFactory extends Factory
             'category_id' => Category::factory(),
             'source_id' => Source::factory(),
             'author_id' => Author::factory(),
-            'title' => $this->faker->sentence(),
-            'description' => $this->faker->paragraph(),
-            'published_at' => $this->faker->dateTime(),
-            'url_to_image' => $this->faker->imageUrl(),
-            'content' => $this->faker->paragraph(),
+            'title' => fake()->sentence(),
+            'description' => fake()->paragraph(),
+            'published_at' => fake()->dateTime(),
+            'url_to_image' => fake()->imageUrl(),
+            'content' => fake()->paragraph(),
         ];
     }
 }

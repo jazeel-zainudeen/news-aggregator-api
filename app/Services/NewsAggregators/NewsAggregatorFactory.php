@@ -19,7 +19,7 @@ class NewsAggregatorFactory
      *
      * @throws NewsAggregatorException If an invalid aggregator type is provided.
      */
-    public static function make(NewsAggregatorTypeEnum $type): NewsAggregatorInterface
+    public static function make(?NewsAggregatorTypeEnum $type): NewsAggregatorInterface
     {
         return match ($type) {
             NewsAggregatorTypeEnum::NEWS_API => new NewsApiAdapter,

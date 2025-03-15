@@ -22,7 +22,7 @@ class UserPreferenceFactory extends Factory
     {
         $preferableTypes = [Source::class, Category::class, Author::class];
 
-        $preferableType = $this->faker->randomElement($preferableTypes);
+        $preferableType = fake()->randomElement($preferableTypes);
         $preferable = $preferableType::factory()->create();
 
         return [

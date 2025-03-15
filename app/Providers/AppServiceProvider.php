@@ -20,10 +20,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Relation::enforceMorphMap([
+        Relation::morphMap([
             'category' => 'App\Models\Category',
             'source' => 'App\Models\Source',
             'author' => 'App\Models\Author',
         ]);
+
+        \Illuminate\Support\Facades\DB::listen(function ($query) {
+            $channel = \Illuminate\Support\Facades\Log::build([
+                'driver' => 'daily',
+                'path' => storage_path('logs/queries.log'),
+                'days' => 1,
+            ]);
+
+            \Illuminate\Support\Facades\Log::stack(['daily' => $channel])
+                ->info($query->time . 'ms - ' . vsprintf(str_replace('?', '%s', $query->sql), $query->bindings) . PHP_EOL);
+        });
     }
 }
