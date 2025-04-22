@@ -113,11 +113,11 @@ http://localhost:8025/
 ### Populating News Articles
 To populate news articles, choose any of the following methods:
 
-1. **Run the seeder**
+#### Option 1: Run the Seeder
    ```bash
    ./vendor/bin/sail artisan db:seed --class=NewsArticleSeeder
    ```
-2. **Add API keys in the .env file and run the scheduled command**
+#### Option 2: Add API keys in the `.env` file and run the scheduled command *(Recommended)*
    ```bash
    ./vendor/bin/sail artisan news:fetch
    ```
